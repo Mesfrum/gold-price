@@ -16,95 +16,99 @@ import joblib
 
 import os.path
 
-random_state_value = 1
-gold_data = pd.read_csv("gld_price_data.csv")
-
 # make directoryies if it does not exist
 def check_folder_exists(path_to_folder):
     if not os.path.exists(path_to_folder):
         os.makedirs("./"+path_to_folder)
-       
-check_folder_exists('pickle_files')
-check_folder_exists('media_plots')
-# get a overview of csv data
+        
 
-# print first and last five rows of data to
-print(gold_data.head(), end="\n\n")
-print(gold_data.tail(), end="\n\n")
+def main():
+    random_state_value = 1
+    gold_data = pd.read_csv("gld_price_data.csv")
+    
+    check_folder_exists('pickle_files')
+    check_folder_exists('media_plots')
+    # get a overview of csv data
 
-print("Number of columns and rows -", gold_data.shape, end="\n\n")
-print("Column name, type, null count and data type - ", end="\n\n")
-print(gold_data.info(), end="\n\n")
+    # print first and last five rows of data to
+    print(gold_data.head(), end="\n\n")
+    print(gold_data.tail(), end="\n\n")
 
-# check number of missing values
-missing_values = gold_data.isnull().sum()
-print("Missing values -")
-print(missing_values, end="\n\n")
+    print("Number of columns and rows -", gold_data.shape, end="\n\n")
+    print("Column name, type, null count and data type - ", end="\n\n")
+    print(gold_data.info(), end="\n\n")
 
-# statiscal measure of data
-print("Statiscal measures of data-")
-print(gold_data.describe(), end="\n\n")
+    # check number of missing values
+    missing_values = gold_data.isnull().sum()
+    print("Missing values -")
+    print(missing_values, end="\n\n")
 
-gold_data = gold_data.drop(["Date"], axis=1)  # date is irrelevant
+    # statiscal measure of data
+    print("Statiscal measures of data-")
+    print(gold_data.describe(), end="\n\n")
 
-# check what values correlate with each other
-correlation = gold_data.corr()
-print("Corelation of all values with eachother")
-print(correlation, end="\n\n")
+    gold_data = gold_data.drop(["Date"], axis=1)  # date is irrelevant
 
-# visualuize this correlation
-graph_heatmap = plt.figure(1, figsize=(8, 8))
-sns.heatmap(
-    correlation,
-    cbar=True,
-    square=True,
-    fmt=".1f",
-    annot=True,
-    annot_kws={"size": 8},
-    cmap="rocket",
-)
-plt.savefig('media_plots/correlation_heatmap.png',bbox_inches='tight')
-# plt.show()
+    # check what values correlate with each other
+    correlation = gold_data.corr()
+    print("Corelation of all values with eachother")
+    print(correlation, end="\n\n")
 
-# correaltion values for gold
-print("Correlation of gold to the rest of the values -")
-print(correlation["GLD"], end="\n\n")
+    # visualuize this correlation
+    sns.heatmap(
+        correlation,
+        cbar=True,
+        square=True,
+        fmt=".1f",
+        annot=True,
+        annot_kws={"size": 8},
+        cmap="rocket",
+    )
+    plt.savefig('media_plots/correlation_heatmap.png',bbox_inches='tight')
+    # plt.show()
 
-# how gold prices are distributed
-sns.displot(gold_data["GLD"], color="gold")
-plt.savefig('media_plots/distribution_plot.png',bbox_inches='tight')
-# plt.show()
+    # correaltion values for gold
+    print("Correlation of gold to the rest of the values -")
+    print(correlation["GLD"], end="\n\n")
 
-X = gold_data.drop(["GLD"], axis=1)  # date is irrelevant
-Y = gold_data["GLD"]
+    # how gold prices are distributed
+    sns.displot(gold_data["GLD"], color="gold")
+    plt.savefig('media_plots/distribution_plot.png',bbox_inches='tight')
+    # plt.show()
 
-print("datatype of non-gold values -", type(X))
-print("datatype of gold values -", type(Y))
+    X = gold_data.drop(["GLD"], axis=1)  # date is irrelevant
+    Y = gold_data["GLD"]
 
-print("Value of non gold entites - ")
-print(X, end="\n\n")  # silver, uso , sp500 , usd/eur
-print("Value of gold entites - ")
-print(Y, end="\n\n")  # gold column
+    print("datatype of non-gold values -", type(X))
+    print("datatype of gold values -", type(Y))
 
-# split data into training data and testing data - test_size is in percentages OF 80-20%, change random state later
-X_train, X_test, Y_train, Y_test = train_test_split(
-    X, Y, test_size=0.2, random_state=random_state_value
-)
+    print("Value of non gold entites - ")
+    print(X, end="\n\n")  # silver, uso , sp500 , usd/eur
+    print("Value of gold entites - ")
+    print(Y, end="\n\n")  # gold column
 
-# check count of training and testing data ie if data is split 80-20
-print("size of training data for non-gold values -", X_train.shape[0])
-print("size of testing data for non-gold values -", X_test.shape[0])
-print("size of training data for gold values -", Y_train.shape[0])
-print("size of testing data for non-gold values -", Y_test.shape[0], end="\n\n")
+    # split data into training data and testing data - test_size is in percentages OF 80-20%, change random state later
+    X_train, X_test, Y_train, Y_test = train_test_split(
+        X, Y, test_size=0.2, random_state=random_state_value
+    )
 
-# MODeL Training - n_estimators means number of decision trees ----------------------------------------------
+    # check count of training and testing data ie if data is split 80-20
+    print("size of training data for non-gold values -", X_train.shape[0])
+    print("size of testing data for non-gold values -", X_test.shape[0])
+    print("size of training data for gold values -", Y_train.shape[0])
+    print("size of testing data for non-gold values -", Y_test.shape[0], end="\n\n")
 
-regressor = RandomForestRegressor(n_estimators=10, random_state=random_state_value)
-regressor.fit(X_train, Y_train)
+    # MODeL Training - n_estimators means number of decision trees ----------------------------------------------
 
-# model trainig done ---------------------------------------------------------------------------------------
+    regressor = RandomForestRegressor(n_estimators=10, random_state=random_state_value)
+    regressor.fit(X_train, Y_train)
 
-#  save the model as a pickle file
-joblib.dump(regressor, "pickle_files/regressor.pkl")
-X_test.to_pickle("pickle_files/X_test.pkl")
-Y_test.to_pickle("pickle_files/Y_test.pkl")
+    # model trainig done ---------------------------------------------------------------------------------------
+
+    #  save the model as a pickle file
+    joblib.dump(regressor, "pickle_files/regressor.pkl")
+    X_test.to_pickle("pickle_files/X_test.pkl")
+    Y_test.to_pickle("pickle_files/Y_test.pkl")
+
+if __name__ == '__main__':
+    main()

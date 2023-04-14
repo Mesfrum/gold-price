@@ -5,6 +5,7 @@ __pycache__/
 
 # random 
 sandbox.py
+pickle_files/
 
 # vs code 
 .vscode
