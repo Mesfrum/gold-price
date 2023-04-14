@@ -6,12 +6,7 @@ import matplotlib.ticker as plticker
 import seaborn as sns
 import pandas as pd
 import os.path
-
-
-def check_folder_exists(path_to_folder):
-    if not os.path.exists(path_to_folder):
-        os.makedirs("./" + path_to_folder)
-
+from train_model import check_folder_exists
 
 def check_pickle_exists():
     if (
@@ -20,7 +15,6 @@ def check_pickle_exists():
         or not os.path.exists("pickle_files/regressor.pkl")
     ):
         from train_model import main
-
         main()
 
 
