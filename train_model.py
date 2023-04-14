@@ -14,9 +14,18 @@ from sklearn.ensemble import RandomForestRegressor
 from joblib import Parallel, delayed
 import joblib
 
+import os.path
+
 random_state_value = 1
 gold_data = pd.read_csv("gld_price_data.csv")
 
+# make directoryies if it does not exist
+def check_folder_exists(path_to_folder):
+    if not os.path.exists(path_to_folder):
+        os.makedirs("./"+path_to_folder)
+       
+check_folder_exists('pickle_files')
+check_folder_exists('media_plots')
 # get a overview of csv data
 
 # print first and last five rows of data to
@@ -55,7 +64,7 @@ sns.heatmap(
     cmap="rocket",
 )
 plt.savefig('media_plots/correlation_heatmap.png',bbox_inches='tight')
-plt.show()
+# plt.show()
 
 # correaltion values for gold
 print("Correlation of gold to the rest of the values -")
@@ -64,7 +73,7 @@ print(correlation["GLD"], end="\n\n")
 # how gold prices are distributed
 sns.displot(gold_data["GLD"], color="gold")
 plt.savefig('media_plots/distribution_plot.png',bbox_inches='tight')
-plt.show()
+# plt.show()
 
 X = gold_data.drop(["GLD"], axis=1)  # date is irrelevant
 Y = gold_data["GLD"]
@@ -90,12 +99,12 @@ print("size of testing data for non-gold values -", Y_test.shape[0], end="\n\n")
 
 # MODeL Training - n_estimators means number of decision trees ----------------------------------------------
 
-regressor = RandomForestRegressor(n_estimators=100, random_state=random_state_value)
+regressor = RandomForestRegressor(n_estimators=10, random_state=random_state_value)
 regressor.fit(X_train, Y_train)
 
 # model trainig done ---------------------------------------------------------------------------------------
 
-#  save the maodel as a pickle file
+#  save the model as a pickle file
 joblib.dump(regressor, "pickle_files/regressor.pkl")
 X_test.to_pickle("pickle_files/X_test.pkl")
 Y_test.to_pickle("pickle_files/Y_test.pkl")

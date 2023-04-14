@@ -3,6 +3,15 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# random 
+sandbox.py
+
+# vs code 
+.vscode
+
+# pickle
+.pkl
+
 # C extensions
 *.so
 
