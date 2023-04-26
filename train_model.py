@@ -13,21 +13,21 @@ from sklearn.ensemble import RandomForestRegressor
 # for saving regression model as file for reuseability
 from joblib import Parallel, delayed
 import joblib
-
 import os.path
 
-# make directoryies if it does not exist
+
+# make directories if it does not exist
 def check_folder_exists(path_to_folder):
     if not os.path.exists(path_to_folder):
-        os.makedirs("./"+path_to_folder)
-        
+        os.makedirs("./" + path_to_folder)
+
 
 def main():
     random_state_value = 1
     gold_data = pd.read_csv("gld_price_data.csv")
-    
-    check_folder_exists('pickle_files')
-    check_folder_exists('media_plots')
+
+    check_folder_exists("pickle_files")
+    check_folder_exists("media_plots")
     # get a overview of csv data
 
     # print first and last five rows of data to
@@ -64,7 +64,7 @@ def main():
         annot_kws={"size": 8},
         cmap="rocket",
     )
-    plt.savefig('media_plots/correlation_heatmap.png',bbox_inches='tight')
+    plt.savefig("media_plots/correlation_heatmap.png", bbox_inches="tight")
     # plt.show()
 
     # correaltion values for gold
@@ -73,7 +73,7 @@ def main():
 
     # how gold prices are distributed
     sns.displot(gold_data["GLD"], color="gold")
-    plt.savefig('media_plots/distribution_plot.png',bbox_inches='tight')
+    plt.savefig("media_plots/distribution_plot.png", bbox_inches="tight")
     # plt.show()
 
     X = gold_data.drop(["GLD"], axis=1)  # date is irrelevant
@@ -110,5 +110,6 @@ def main():
     X_test.to_pickle("pickle_files/X_test.pkl")
     Y_test.to_pickle("pickle_files/Y_test.pkl")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
