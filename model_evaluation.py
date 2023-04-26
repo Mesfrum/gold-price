@@ -84,5 +84,26 @@ def master():
     plt.close()
     # plt.show()
     
+    # residual plot 
+    fig,ax = plt.subplots()
+    sns.set_style("whitegrid")
+    fig.set_facecolor('black')
+    ax.set_facecolor('black')
+    ax.axes.set_xlabel('actual')
+    ax.axes.set_ylabel('predicted')
+    
+    for tick_label in ax.axes.get_yticklabels():
+        tick_label.set_color("white")
+    for tick_label in ax.axes.get_xticklabels():
+        tick_label.set_color("white")
+    
+    for _,s in ax.spines.items():
+        s.set_color('cyan')
+    plt.grid()
+    
+    sns.residplot(x = Y_test, y = test_data_prediciton, color = 'cyan',label= 'Gold prices')
+    fig.savefig(r'media_plots/error_rate.png')
+    plt.show()
+    
 if __name__ == '__main__':
     master()
