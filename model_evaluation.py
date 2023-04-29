@@ -9,6 +9,7 @@ import numpy as np
 import os.path
 from train_model import check_folder_exists
 
+accuracy_percent = 0
 
 def check_pickle_exists():
     if (
@@ -103,8 +104,12 @@ def master():
     plt.grid()
     sns.residplot(x=Y_test, y=test_data_prediciton, color="cyan", label="Gold prices")
     fig.savefig(r"media_plots/error_rate.png")
-    plt.show()
+    # plt.show()
 
+    global accuracy_percent
+    accuracy_percent = error_score
+    with open("accuracy_percent.txt", "w") as my_file:
+        my_file.write(str(error_score))
 
 if __name__ == "__main__":
     master()

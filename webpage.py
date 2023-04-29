@@ -18,9 +18,9 @@ def check_prediction_data_exists():
     return test_data_prediction
 
 
-def on_click_event(usd_price, silver_price, uso_price, eur_usd_price):
+def on_click_event(spx_price, silver_price, uso_price, eur_usd_price):
     prediction = regression.predict(
-        [[usd_price, silver_price, uso_price, eur_usd_price]]
+        [[spx_price, silver_price, uso_price, eur_usd_price]]
     )
     return prediction
 
@@ -43,16 +43,19 @@ data["Date"] = pd.to_datetime(data["Date"]).dt.date
 # load regresion model
 regression = joblib.load(r"pickle_files/regressor.pkl")
 
+with open("accuracy_percent.txt", "r") as my_file:
+        accuracy_percent = my_file.read()
+        
 st.set_page_config(page_title="goldey")
 
 with st.container():
-    st.subheader("A TE MINI PROJECT")
+    st.subheader(" TE MINI PROJECT")
     st.title("Predicting the prices of gold")
 
 with st.container():
-    st.subheader("The parameters are USD, SILVER, US OIL, EUR/USD")
-    usd_price = st.number_input("Insert a price for USD:")
-    st.write("the number is ", usd_price)
+    st.subheader("The parameters are SPX, SILVER, US OIL, EUR/USD")
+    spx_price = st.number_input("Insert a price for SPX:")
+    st.write("the number is ", spx_price)
     silver_price = st.number_input("Insert a price for SILVER:")
     st.write("the number is ", silver_price)
     uso_price = st.number_input("Insert a price for US Oil:")
@@ -61,12 +64,16 @@ with st.container():
     st.write("the number is ", eur_usd_price)
 
     if st.button("Calculate"):
-        prediction = on_click_event(usd_price, silver_price, uso_price, eur_usd_price)
+        prediction = on_click_event(spx_price, silver_price, uso_price, eur_usd_price)
         st.write("The predicted price of GOLD is")
         st.subheader(float(prediction))
         st.subheader('USD/OUNCE')
 
 with st.container():
+    st.write('-----------')
+    st.write('The Error rate of the Regression Model generated using Random Forest Resgression is')
+    st.subheader(float(accuracy_percent)*100)
+    
     st.write("-----------")
     st.write("DATA")
     st.dataframe(data, width=704, height=300)
@@ -91,3 +98,13 @@ with st.container():
     st.write("-----------")
     st.write("Price Difference between actual and predicted price vs Gold price Residual plot")
     st.image(r"media_plots/error_rate.png", width=704)
+    
+    st.write("-----------")
+    st.write("Price Difference")
+    cross_data = pd.DataFrame({'actual_data': Y_test, 'predicted_data': test_data_prediction.flatten()})
+    st.line_chart(cross_data)
+    
+    st.write("-----------")
+    st.write("price comparision with overlapping line graph")
+    st.image(r"media_plots/price_comparison.png", width=704)
+    st.write('-----------------')

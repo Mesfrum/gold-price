@@ -100,7 +100,7 @@ def main():
 
     # MODeL Training - n_estimators means number of decision trees ----------------------------------------------
 
-    regressor = RandomForestRegressor(n_estimators=10, random_state=random_state_value)
+    regressor = RandomForestRegressor(n_estimators=100, random_state=random_state_value)
     regressor.fit(X_train, Y_train)
 
     # model trainig done ---------------------------------------------------------------------------------------
